@@ -11,6 +11,21 @@
 |
 */
 
+use Illuminate\Support\Facades\File;
+use Symfony\Component\Finder\Finder;
+
 Route::get('/', function () {
-    return view('welcome');
+    $files = Finder::create()
+        ->in(app_path())
+        ->name('*.txt')
+        ->contains('hello');
+
+    foreach ($files as $file) {
+        $contents = File::get($file->getRealPath());
+
+        $helloWord = str_replace('hello', 'Hello Word!', $contents);
+
+        File::put($file->getRealPath(), $helloWord);
+
+    }
 });
